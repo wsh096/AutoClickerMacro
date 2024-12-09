@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AutoClickerMacro
@@ -21,6 +22,9 @@ namespace AutoClickerMacro
             _mouseHook = new MouseHook();
             _mouseHook.MouseAction += new EventHandler<MouseEventArgs>(OnMouseAction);
             _mouseHook.Hook();
+            numericUpDown1.Minimum = 1; // 최소 1분
+            numericUpDown1.Maximum = 3600; // 최대 10시간 (밀리초)
+            numericUpDown1.Value = 5; // 기본값 5분
         }
 
         private void OnMouseAction(object sender, MouseEventArgs e)
@@ -65,6 +69,29 @@ namespace AutoClickerMacro
         {
             _mouseHook.Unhook();
             base.OnFormClosing(e);
+        }
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            // 설정된 시간 대기
+            int delayInMinutes = (int)numericUpDown1.Value;
+            int delayInMilliseconds = delayInMinutes * 60 * 1000; // 분을 밀리초로 변환
+            await Task.Delay(delayInMilliseconds); // 대기
+
+            // 마우스 클릭 이벤트 발생
+            PerformMouseClick();
+
+            // 프로그램 종료
+            Application.Exit();
+        }
+        private void PerformMouseClick()
+        {
+            // 현재 마우스 위치 가져오기
+            uint x = (uint)Cursor.Position.X;
+            uint y = (uint)Cursor.Position.Y;
+
+            // 마우스 클릭 시뮬레이션
+            mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, x, y, 0, 0);
         }
     }
 }
