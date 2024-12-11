@@ -23,7 +23,7 @@ namespace AutoClickerMacro
             _mouseHook.MouseAction += new EventHandler<MouseEventArgs>(OnMouseAction);
             _mouseHook.Hook();
             numericUpDown1.Minimum = 1; // 최소 1분
-            numericUpDown1.Maximum = 3600; // 최대 10시간 (밀리초)
+            numericUpDown1.Maximum = 3600; // 최대 60시간 (밀리초)
             numericUpDown1.Value = 5; // 기본값 5분
         }
 
